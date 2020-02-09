@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDbPlayground.Test", "MongoDbPayground\MongoDbPlayground.Test.csproj", "{BDA0EBD7-6B91-47E1-98FC-A9B801B650DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDb.Playground.Repository", "MongoDb.Playground.Repository\MongoDb.Playground.Repository.csproj", "{C12C2D43-2A29-4323-97C3-419E32273502}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDA0EBD7-6B91-47E1-98FC-A9B801B650DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDA0EBD7-6B91-47E1-98FC-A9B801B650DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDA0EBD7-6B91-47E1-98FC-A9B801B650DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDA0EBD7-6B91-47E1-98FC-A9B801B650DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C12C2D43-2A29-4323-97C3-419E32273502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C12C2D43-2A29-4323-97C3-419E32273502}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C12C2D43-2A29-4323-97C3-419E32273502}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C12C2D43-2A29-4323-97C3-419E32273502}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
