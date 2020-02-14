@@ -20,6 +20,16 @@ namespace MongoDb.Playground.Repository
             _collection = collection;
         }
 
+        public async Task Delete(Expression<Func<T, bool>> predicate)
+        {
+            await _db.GetCollection<T>(_collection).DeleteOneAsync(predicate);
+        }
+
+        public async Task DeleteAll()
+        {
+            await _db.GetCollection<T>(_collection).DeleteManyAsync(FilterDefinition<T>.Empty);
+        }
+
         public async Task<IEnumerable<T>> FindAll()
         {
             return await _db.GetCollection<T>(_collection).Find<T>(FilterDefinition<T>.Empty).ToListAsync<T>();
@@ -33,6 +43,12 @@ namespace MongoDb.Playground.Repository
         public async Task Insert(T document)
         {
             await _db.GetCollection<T>(_collection).InsertOneAsync(document);
+        }
+
+        public async Task UpdateOne(T document)
+        {
+            var filter = Builders<T>.Filter.Eq(s => s.Id, document.Id);
+            await _db.GetCollection<T>(_collection).ReplaceOneAsync(filter, document);
         }
     }
 }

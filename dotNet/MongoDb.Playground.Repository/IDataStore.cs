@@ -10,5 +10,8 @@ namespace MongoDb.Playground.Repository
         Task<IEnumerable<T>> FindAll();
         Task<T> FindOne(Expression<Func<T, bool>> predicate);
         Task Insert(T document);
+        Task Delete(Expression<Func<T, bool>> predicate);
+        Task DeleteAll();
+        Task UpdateOne(T document);
     }
 }
