@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDb.Playground.Repository;
+using MongoDbPlayground.Test.Models;
 using Xunit;
 
 namespace MongoDbPayground
 {
     public class MongoDbTests
     {
-        private readonly IDataStore<Document> _repository;
+        private readonly IDataStore<Document<TopSecret>> _repository;
 
         public MongoDbTests()
         {
             var connectionString = "mongodb://localhost:27017";
             var database = "mongolab";
-            _repository = new DataStore<Document>(new OptionsMonitorDbConfiguration(connectionString, database), "Documents");
+            _repository = new DataStore<Document<TopSecret>>(new OptionsMonitorDbConfiguration(connectionString, database), "Documents");
         }
 
         private async Task Initialize()
         {
-            var document = new Document
+            var document = new Document<TopSecret>
             {
                 Id = "document-0",
                 Name = "roger",
@@ -31,9 +32,11 @@ namespace MongoDbPayground
                     ["hair"] = "black",
                 },
                 Tags = new List<string> { "waterpolo", "climbing", "developing" },
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                Special = new TopSecret { Origin = "Catalonia", Author = "James", CreationDate = DateTime.MinValue, Type = "classified" },
+                Polimorfism = new Polimorfism { Hola = "hola", Adeu = "adeu" }
             };
-            var document1 = new Document
+            var document1 = new Document<TopSecret>
             {
                 Id = "document-1",
                 Name = "adria",
@@ -44,7 +47,9 @@ namespace MongoDbPayground
                     ["hair"] = "black",
                 },
                 Tags = new List<string> { "beer", "swim", "politics" },
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                Special = new TopSecret { Origin = "Ireland", Author = "Emilia", CreationDate = DateTime.MaxValue, Type = "classified" },
+                Polimorfism = new Polimorfism { Hola = "hola", Adeu = "adeu" }
             };
 
             await _repository.Insert(document);
@@ -84,7 +89,7 @@ namespace MongoDbPayground
 
             //Assert
             Assert.True(result.Id == id);
-            Assert.IsType<Document>(result);
+            Assert.IsType<Document<TopSecret>>(result);
 
             await Clean();
         }
@@ -93,7 +98,7 @@ namespace MongoDbPayground
         public async Task Test_Insert_Success()
         {
             //Arrange
-            var document = new Document
+            var document = new Document<TopSecret>
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = "roger",
@@ -104,7 +109,8 @@ namespace MongoDbPayground
                     ["hair"] = "black",
                 },
                 Tags = new List<string> { "waterpolo", "climbing", "developing" },
-                Timestamp = DateTime.UtcNow
+                Timestamp = DateTime.UtcNow,
+                Special = new TopSecret { Origin = "Malasia", Author = "Me", CreationDate = DateTime.UtcNow.AddMonths(-1), Type = "classified" }
             };
 
             //Act

@@ -15,4 +15,11 @@
   <ItemGroup>
     <ProjectReference Include="..\MongoDb.Playground.Repository\MongoDb.Playground.Repository.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="mono_crash.dd6a26835.0.json" />
+    <None Remove="mono_crash.mem.976.1.blob" />
+  </ItemGroup>
 </Project>
