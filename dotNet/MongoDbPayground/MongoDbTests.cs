@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MongoDb.Playground.Repository;
 using MongoDbPlayground.Test.Models;
@@ -52,13 +53,13 @@ namespace MongoDbPayground
                 Polimorfism = new Polimorfism { Hola = "hola", Adeu = "adeu" }
             };
 
-            await _repository.Insert(document);
-            await _repository.Insert(document1);
+            await _repository.InsertAsync(document, CancellationToken.None);
+            await _repository.InsertAsync(document1, CancellationToken.None);
         }
 
         private async Task Clean()
         {
-            await _repository.DeleteAll();
+            await _repository.DeleteAllAsync(CancellationToken.None);
         }
 
         [Fact]
@@ -68,7 +69,7 @@ namespace MongoDbPayground
             await Initialize();
 
             //Act
-            var result = await _repository.FindAll();
+            var result = await _repository.FindAllAsync(_ => true, CancellationToken.None);
 
             //Assert
             Assert.True(result.Any());
@@ -85,7 +86,7 @@ namespace MongoDbPayground
             await Initialize();
 
             //Act
-            var result = await _repository.FindOne(d => d.Id == id);
+            var result = await _repository.FindOneAsync(d => d.Id == id, CancellationToken.None);
 
             //Assert
             Assert.True(result.Id == id);
@@ -114,8 +115,8 @@ namespace MongoDbPayground
             };
 
             //Act
-            await _repository.Insert(document);
-            var result = await _repository.FindOne(d => d.Id == document.Id);
+            await _repository.InsertAsync(document, CancellationToken.None);
+            var result = await _repository.FindOneAsync(d => d.Id == document.Id, CancellationToken.None);
 
             //Assert
             Assert.NotNull(result);
@@ -130,11 +131,11 @@ namespace MongoDbPayground
         {
             //Arrange
             await Initialize();
-            var document = await _repository.FindOne(d => d.Id == id);
+            var document = await _repository.FindOneAsync(d => d.Id == id, CancellationToken.None);
             document.Number = 60;
             //Act
-            await _repository.UpdateOne(document);
-            var result = await _repository.FindOne(d => d.Id == id);
+            await _repository.UpdateOneAsync(document, CancellationToken.None);
+            var result = await _repository.FindOneAsync(d => d.Id == id, CancellationToken.None);
 
             //Assert
             Assert.True(result.Number == document.Number);
@@ -151,8 +152,8 @@ namespace MongoDbPayground
             await Initialize();
 
             //Act
-            await _repository.Delete(d => d.Id == id);
-            var result = await _repository.FindOne(d => d.Id == id);
+            await _repository.DeleteAsync(d => d.Id == id, CancellationToken.None);
+            var result = await _repository.FindOneAsync(d => d.Id == id, CancellationToken.None);
 
             //Assert
             Assert.Null(result);

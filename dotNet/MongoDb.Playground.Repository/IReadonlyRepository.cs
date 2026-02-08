@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace MongoDb.Playground.Repository
 {
-    public interface IViewModel { }
+    public interface IViewModel : ICollectionDocument { }
 
     public interface IReadonlyRepository<T> where T : IViewModel
     {
@@ -15,22 +15,18 @@ namespace MongoDb.Playground.Repository
         Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken);
     }
 
-    public abstract class ReadonlyRepository<T> : IReadonlyRepository<T> where T : IViewModel
+    public abstract class ReadonlyRepository<T>(IDataStore<T> mongoStore) : IReadonlyRepository<T> where T : IViewModel
     {
-
-        public ReadonlyRepository(IDataStore<T> mongoStore, string collection)
-        {
-            _mongoStore = mongoStore.Create(collection);
-        }
+        protected  readonly IDataStore<T> _mongoStore = mongoStore;
 
         public virtual Task<T> GetItemAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken)
         {
-            return _mongoStore.ReadItemAsync(filter, cancellationToken);
+            return _mongoStore.FindOneAsync(filter, cancellationToken);
         }
 
         public virtual Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken)
         {
-            return _mongoStore.QueryItemsAsync(filter, cancellationToken);
+            return _mongoStore.FindAllAsync(filter, cancellationToken);
         }
     }
 }

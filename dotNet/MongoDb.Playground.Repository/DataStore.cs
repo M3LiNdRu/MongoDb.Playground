@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using MongoDb.Playground.Repository.Configuration;
@@ -20,35 +21,37 @@ namespace MongoDb.Playground.Repository
             _collection = collection;
         }
 
-        public async Task Delete(Expression<Func<T, bool>> predicate)
+
+        public Task DeleteAllAsync(CancellationToken cancellationToken)
         {
-            await _db.GetCollection<T>(_collection).DeleteOneAsync(predicate);
+            return _db.GetCollection<T>(_collection).DeleteManyAsync(FilterDefinition<T>.Empty, cancellationToken);
         }
 
-        public async Task DeleteAll()
+        public Task DeleteAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
-            await _db.GetCollection<T>(_collection).DeleteManyAsync(FilterDefinition<T>.Empty);
+            return _db.GetCollection<T>(_collection).DeleteOneAsync(predicate, cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> FindAll()
+        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _db.GetCollection<T>(_collection).Find<T>(FilterDefinition<T>.Empty).ToListAsync<T>();
+            return await _db.GetCollection<T>(_collection).Find<T>(FilterDefinition<T>.Empty).ToListAsync<T>(cancellationToken);
         }
 
-        public async Task<T> FindOne(Expression<Func<T, bool>> predicate)
+        public async Task<T> FindOneAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
-            return await _db.GetCollection<T>(_collection).Find<T>(predicate).FirstOrDefaultAsync();
+            return await _db.GetCollection<T>(_collection).Find<T>(predicate).FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task Insert(T document)
+        public Task InsertAsync(T document, CancellationToken cancellationToken)
         {
-            await _db.GetCollection<T>(_collection).InsertOneAsync(document);
+            var options = new InsertOneOptions { BypassDocumentValidation = false };
+            return _db.GetCollection<T>(_collection).InsertOneAsync(document, options, cancellationToken);
         }
 
-        public async Task UpdateOne(T document)
+        public Task UpdateOneAsync(T document, CancellationToken cancellationToken)
         {
             var filter = Builders<T>.Filter.Eq(s => s.Id, document.Id);
-            await _db.GetCollection<T>(_collection).ReplaceOneAsync(filter, document);
+            return _db.GetCollection<T>(_collection).ReplaceOneAsync(filter, document, cancellationToken: cancellationToken);
         }
     }
 }
