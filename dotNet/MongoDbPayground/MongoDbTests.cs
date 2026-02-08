@@ -15,7 +15,7 @@ namespace MongoDbPayground
 
         public MongoDbTests()
         {
-            var connectionString = "mongodb://localhost:27017";
+            var connectionString = "mongodb://localhost:27017/?replicaSet=rs0";
             var database = "mongolab";
             _repository = new DataStore<Document<TopSecret>>(new OptionsMonitorDbConfiguration(connectionString, database), "Documents");
         }
