@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+          cache: true
+          cache-dependency-path: |
+            dotNet/**/*.sln
+            dotNet/**/*.csproj
+            dotNet/**/packages.lock.json
+
+      - name: Start MongoDB (replica set)
+        run: |
+          docker compose up -d mongo
+          docker compose up mongo-init
+
+          echo "Waiting for replica set to be ready..."
+          for i in {1..60}; do
+            if docker compose exec -T mongo mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' | grep -q 1; then
+              if docker compose exec -T mongo mongosh --quiet --eval 'rs.status().ok' | grep -q 1; then
+                echo "MongoDB replica set is ready."
+                exit 0
+              fi
+            fi
+            sleep 2
+          done
+
+          echo "MongoDB replica set did not become ready in time."
+          docker compose logs mongo || true
+          docker compose logs mongo-init || true
+          exit 1
+
+      - name: Restore
+        run: dotnet restore dotNet/MongoDb.Playground.sln
+
+      - name: Build
+        run: dotnet build dotNet/MongoDb.Playground.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test dotNet/MongoDb.Playground.sln -c Release --no-build
+
+      - name: Shutdown MongoDB
+        if: always()
+        run: docker compose down -v
