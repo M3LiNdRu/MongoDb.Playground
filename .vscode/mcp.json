@@ -1,0 +1,31 @@
+{
+	"servers": {
+		"mongodb": {
+			"command": "docker",
+			"args": [
+				"run",
+				"--rm",
+				"-i",
+				"--network=host",
+				"-e",
+				"MDB_MCP_CONNECTION_STRING",
+				"node:20-bookworm-slim",
+				"npx",
+				"-y",
+				"mongodb-mcp-server"
+			],
+			"env": {
+				"MDB_MCP_CONNECTION_STRING": "${input:connection_string}"
+			},
+			"type": "stdio"
+		}
+	},
+	"inputs": [
+		{
+			"id": "connection_string",
+			"type": "promptString",
+			"description": "MongoDB connection string",
+			"default": "mongodb://localhost:27017"
+		}
+	]
+}
