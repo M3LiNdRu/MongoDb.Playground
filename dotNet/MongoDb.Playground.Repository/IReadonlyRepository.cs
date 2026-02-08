@@ -26,7 +26,7 @@ namespace MongoDb.Playground.Repository
 
         public virtual Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken)
         {
-            return _mongoStore.FindAllAsync(filter, cancellationToken);
+            return _mongoStore.FindAsync(filter, cancellationToken);
         }
     }
 }

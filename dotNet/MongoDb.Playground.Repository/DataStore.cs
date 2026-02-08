@@ -32,7 +32,7 @@ namespace MongoDb.Playground.Repository
             return _db.GetCollection<T>(_collection).DeleteOneAsync(predicate, cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
         {
             return await _db.GetCollection<T>(_collection).Find<T>(FilterDefinition<T>.Empty).ToListAsync<T>(cancellationToken);
         }
@@ -46,6 +46,12 @@ namespace MongoDb.Playground.Repository
         {
             var options = new InsertOneOptions { BypassDocumentValidation = false };
             return _db.GetCollection<T>(_collection).InsertOneAsync(document, options, cancellationToken);
+        }
+
+        public Task InsertAsync(IEnumerable<T> document, CancellationToken cancellationToken)
+        {
+            var options = new InsertManyOptions { BypassDocumentValidation = false };
+            return _db.GetCollection<T>(_collection).InsertManyAsync(document, options, cancellationToken);
         }
 
         public Task UpdateOneAsync(T document, CancellationToken cancellationToken)

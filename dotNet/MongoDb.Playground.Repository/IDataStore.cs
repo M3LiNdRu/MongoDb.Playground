@@ -13,9 +13,10 @@ namespace MongoDb.Playground.Repository
     
     public interface IDataStore<T> where T : ICollectionDocument
     {
-        Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
         Task<T> FindOneAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
         Task InsertAsync(T document, CancellationToken cancellationToken);
+        Task InsertAsync(IEnumerable<T> document, CancellationToken cancellationToken);
         Task DeleteAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
         Task DeleteAllAsync(CancellationToken cancellationToken);
         Task UpdateOneAsync(T document, CancellationToken cancellationToken);

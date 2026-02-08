@@ -69,7 +69,7 @@ namespace MongoDbPayground
             await Initialize();
 
             //Act
-            var result = await _repository.FindAllAsync(_ => true, CancellationToken.None);
+            var result = await _repository.FindAsync(_ => true, CancellationToken.None);
 
             //Assert
             Assert.True(result.Any());
