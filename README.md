@@ -65,12 +65,12 @@ mongoimport --uri="mongodb://mongo:27017/?directConnection=true" --db MovieStore
 #### Using mongodump & mongorestore
 ```bash
 # Dump a specific database and collection to the backups volume
-mongodump --uri="mongodb://mongo:27017/?directConnection=true" --db MovieStore --collection movies --out=/backups/2026/02/13
+mongodump --uri="mongodb://mongo:27017/?directConnection=true" --db MovieStore --collection movies --out=/backups/20260213
 
 mongoexport --uri="mongodb://mongo:27017/?directConnection=true" --collection=roger-query --out=emailInfoTable.json --jsonArray
 
 # Restore a database from the backups volume
-mongorestore --uri="mongodb://mongo:27017/?directConnection=true" --db MovieStore --collection movies --archive --gzip /backups/MovieStore-2026-02-08.archive.gz
+mongorestore --uri="mongodb://mongo:27017/?directConnection=true" --db MovieStore --collection movies /backups/20260213
 ```
 
 #### Running JavaScript Scripts
@@ -82,12 +82,12 @@ You can execute JavaScript files directly against the database using mongosh:
 # Example: ./scripts/add-property.js
 
 # Run the script from within the mongo-tools container
-mongosh mongodb://mongo:27017/?directConnection=true&authSource=admin /scripts/add-property.js
+mongosh mongodb://mongo:27017/MovieStore?directConnection=true /scripts/add-property.js
 ```
 **Alternative: Run inline JavaScript**
 ```bash
 # Execute JavaScript directly without a file
-mongosh mongodb://mongo:27017/?directConnection=true&authSource=admin --eval "db.movies.updateMany({}, {\$set: {newProperty: 'value'}})"
+mongosh mongodb://mongo:27017/MovieStore?directConnection=true --eval "db.movies.updateMany({}, {\$set: {newProperty: 'value'}})"
 ```
 
 ## Volumes
