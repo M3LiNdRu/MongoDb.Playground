@@ -44,6 +44,19 @@ services:
     environment:
       ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/?directConnection=true
       ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: pass
+
+  mongo-tools:
+    image: mongo:latest
+    command: sleep infinity
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/?directConnection=true
+    depends_on:
+      - mongo
+    volumes:
+      - ./data:/backups
+      - ./scripts:/scripts
 
 volumes:
   mongo_data:
