@@ -9,24 +9,28 @@ MongoLab - Play, Test and have fun!
 This Docker Compose Setup provides a MongoDB environment with MongoDB instance, mongo-express web interface and a tools container for command-line operations.
 
 ### mongo replicaset
-- **Image**: `mongo:latest`
+- **Image**: `mongo:7`
 - **Port**: `27017`
 - **Volume**: `mongo_data` mounted at `/data/db`
 
 ### mongo-express
-- **Image**: `mongo-express:latest`
+- **Image**: `mongo-express:1`
 - **Port**: `8081`
 - **URL**: http://localhost:8081
 - Web-based MongoDB admin interface with no basic auth required
 
 ### mongo-tools
-- **Image**: `mongo:latest`
+- **Image**: `mongo:7`
 - Utility container with mongosh, mongodump, and mongorestore
 - Keeps running with `sleep infinity` for interactive access
 - **Volume**: `./data` directory mounted at `/backups`
 
 
 ## Usage
+
+## MongoDB Query Cheatsheet
+
+See [CHEATSHEET.md](CHEATSHEET.md) for a quick reference of common `mongosh` queries (find/projection/sort, date filters, explain, updates/deletes, and aggregation pipeline examples).
 
 ### Start the Services
 ```bash
@@ -101,5 +105,5 @@ This repo includes a VS Code MCP server definition in `.vscode/mcp.json`.
 
 - Does **not** require Node.js installed locally (it runs `mongodb-mcp-server` inside a Docker container)
 - Requires `docker` (and access to the Docker daemon)
-- Default connection string is `mongodb://localhost:27017` (works with the provided `docker-compose.yaml` on Linux via host networking)
+- Default connection string is `mongodb://localhost:27017/?directConnection=true` (works with the provided `docker-compose.yaml` on Linux via host networking)
 
